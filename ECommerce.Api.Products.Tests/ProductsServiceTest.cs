@@ -9,6 +9,7 @@ using Xunit;
 
 namespace ECommerce.Api.Products.Tests
 {
+    //tests
     public class ProductsServiceTest
     {
         [Fact]
