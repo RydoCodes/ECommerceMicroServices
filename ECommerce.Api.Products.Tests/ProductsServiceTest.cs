@@ -5,58 +5,50 @@ using ECommerce.Api.Products.Providers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace ECommerce.Api.Products.Tests
 {
-    //tests
     public class ProductsServiceTest
     {
         [Fact]
-        public async void GetProductsReturnsAllProducts()
+        public async Task GetProductsReturnsAllProducts()
         {
-            var rydooptions = new DbContextOptionsBuilder<ProductsDbContext>()
+            var options = new DbContextOptionsBuilder<ProductsDbContext>()
                 .UseInMemoryDatabase(nameof(GetProductsReturnsAllProducts))
                 .Options;
-            var dbContext = new ProductsDbContext(rydooptions);
-
+            var dbContext = new ProductsDbContext(options);
             CreateProducts(dbContext);
 
             var productProfile = new ProductProfile();
             var configuration = new MapperConfiguration(cfg => cfg.AddProfile(productProfile));
-
             var mapper = new Mapper(configuration);
 
-            var productsprovider = new ProductsProvider(dbContext, null, mapper);
+            var productsProvider = new ProductsProvider(dbContext, null, mapper);
 
-            var product = await productsprovider.GetProductsAsync();
-
-            
-
+            var product = await productsProvider.GetProductsAsync();
             Assert.True(product.IsSuccess);
             Assert.True(product.Products.Any());
             Assert.Null(product.ErrorMessage);
         }
 
         [Fact]
-        public async void GetProductReturnsProductUsingValidId()
+        public async Task GetProductReturnsProductUsingValidId()
         {
-            var rydooptions = new DbContextOptionsBuilder<ProductsDbContext>()
-                .UseInMemoryDatabase(nameof(GetProductsReturnsAllProducts))
+            var options = new DbContextOptionsBuilder<ProductsDbContext>()
+                .UseInMemoryDatabase(nameof(GetProductReturnsProductUsingValidId))
                 .Options;
-            var dbContext = new ProductsDbContext(rydooptions);
-
+            var dbContext = new ProductsDbContext(options);
             CreateProducts(dbContext);
 
             var productProfile = new ProductProfile();
             var configuration = new MapperConfiguration(cfg => cfg.AddProfile(productProfile));
-
             var mapper = new Mapper(configuration);
 
-            var productsprovider = new ProductsProvider(dbContext, null, mapper);
+            var productsProvider = new ProductsProvider(dbContext, null, mapper);
 
-            var product = await productsprovider.GetProductsAsync(1);
-
+            var product = await productsProvider.GetProductsAsync(1);
             Assert.True(product.IsSuccess);
             Assert.NotNull(product.Product);
             Assert.True(product.Product.Id == 1);
@@ -64,24 +56,21 @@ namespace ECommerce.Api.Products.Tests
         }
 
         [Fact]
-        public async void GetProductReturnsProductUsingInvalidId()
+        public async Task GetProductReturnsProductUsingInvalidId()
         {
-            var rydooptions = new DbContextOptionsBuilder<ProductsDbContext>()
-                .UseInMemoryDatabase(nameof(GetProductsReturnsAllProducts))
+            var options = new DbContextOptionsBuilder<ProductsDbContext>()
+                .UseInMemoryDatabase(nameof(GetProductReturnsProductUsingInvalidId))
                 .Options;
-            var dbContext = new ProductsDbContext(rydooptions);
-
+            var dbContext = new ProductsDbContext(options);
             CreateProducts(dbContext);
 
             var productProfile = new ProductProfile();
             var configuration = new MapperConfiguration(cfg => cfg.AddProfile(productProfile));
-
             var mapper = new Mapper(configuration);
 
-            var productsprovider = new ProductsProvider(dbContext, null, mapper);
+            var productsProvider = new ProductsProvider(dbContext, null, mapper);
 
-            var product = await productsprovider.GetProductsAsync(-1);
-
+            var product = await productsProvider.GetProductsAsync(-1);
             Assert.False(product.IsSuccess);
             Assert.Null(product.Product);
             Assert.NotNull(product.ErrorMessage);
@@ -89,17 +78,17 @@ namespace ECommerce.Api.Products.Tests
 
         private void CreateProducts(ProductsDbContext dbContext)
         {
-            for(int i=1;i<=10;i++)
+            for (int i = 1; i <= 10; i++)
             {
                 dbContext.Products.Add(new Product()
                 {
                     Id = i,
                     Name = Guid.NewGuid().ToString(),
                     Inventory = i + 10,
-                    Price = (decimal)3.14 * i
-                }); ; 
+                    Price = (decimal)(i * 3.14)
+                });
             }
             dbContext.SaveChanges();
         }
     }
-}   
+}
