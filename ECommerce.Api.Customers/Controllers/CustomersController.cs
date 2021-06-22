@@ -29,7 +29,8 @@ namespace ECommerce.Api.Customers.Controllers
             return NotFound();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("{id?}")]
         public async Task<IActionResult> GetProductsAsync(int id)
         {
             var result = await customersprovider.GetCustomersAsync(id);

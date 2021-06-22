@@ -38,19 +38,31 @@ namespace ECommerce.Api.Customers.Providers
         }
         public async Task<(bool IsSuccess, IEnumerable<Models.Customer> Customers, string ErrorMessage)> GetCustomersAsync()
         {
-            var Employees = await dbContext.Customers.ToListAsync();
-            if (Employees != null && Employees.Any())
+            try
             {
-                var result = mapper.Map<IEnumerable<Db.Customer>, IEnumerable<Models.Customer>>(Employees);
-                return (true, result, null);
+                logger?.LogInformation("Getting Customers by ID");
+
+                var Employees = await dbContext.Customers.ToListAsync();
+                if (Employees != null && Employees.Any())
+                {
+                    var result = mapper.Map<IEnumerable<Db.Customer>, IEnumerable<Models.Customer>>(Employees);
+                    return (true, result, null);
+                }
+                return (false, null, "Customers not available");
             }
-            return (false, null, "Customers not available");
+            catch(Exception ex)
+            {
+                logger?.LogError(ex.ToString());
+                return (false, null, ex.Message);
+            }
         }
 
         public async Task<(bool IsSuccess, Models.Customer Customer, string ErrorMessage)> GetCustomersAsync(int id)
         {
             try
             {
+                logger?.LogInformation("Getting a Customer by ID");
+
                 var Customer = await dbContext.Customers.FirstOrDefaultAsync(c => c.Id == id);
                 if (Customer != null)
                 {

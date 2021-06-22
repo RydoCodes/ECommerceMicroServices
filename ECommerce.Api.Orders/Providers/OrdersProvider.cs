@@ -81,7 +81,7 @@ namespace ECommerce.Api.Orders.Providers
             {
                 var orders = await dbContext.Orders
                     .Where(o => o.CustomerId == customerId)
-                    .Include(o => o.Items)
+                    //.Include(o => o.Items)
                     .ToListAsync();
                 if (orders != null && orders.Any())
                 {
