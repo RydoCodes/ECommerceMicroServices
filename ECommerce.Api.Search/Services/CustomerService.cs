@@ -14,6 +14,7 @@ namespace ECommerce.Api.Search.Services
         private readonly IHttpClientFactory httpClientFactory;
         private readonly ILogger<CustomerService> rydologger;
 
+        // IHttpClientFactory manages HttpClient objects lifecycle
         public CustomerService(IHttpClientFactory httpClientFactory,ILogger<CustomerService> rydologger)
         {
             this.httpClientFactory = httpClientFactory;
@@ -23,18 +24,18 @@ namespace ECommerce.Api.Search.Services
         {
             try
             {
-                var customerClient = httpClientFactory.CreateClient("RydoCustomersService");
-                var response = await customerClient.GetAsync($"/api/Customers/{id}");
+                HttpClient customerserviceClient = httpClientFactory.CreateClient("RydoCustomersService");
+                HttpResponseMessage response = await customerserviceClient.GetAsync($"/api/Customers/{id}");
                 if(response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsByteArrayAsync();
-                    var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
-                    var result = JsonSerializer.Deserialize<dynamic>(content, options);
+                { 
+                    byte[] content = await response.Content.ReadAsByteArrayAsync();  // Serialize the HTTP content to a byte array as an asynchronous operation.
+                    JsonSerializerOptions options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+                    dynamic result = JsonSerializer.Deserialize<dynamic>(content, options); // Serialize the byte array to <IEnumerable<Order>>
                     return (true, result, null);
                 }
                 return (false, null, response.ReasonPhrase);
             }
-            catch(Exception ex)
+            catch(Exception ex) // when one API is off :{"No connection could be made because the target machine actively refused it."}
             {
                 return (false, null, ex.ToString());
             }

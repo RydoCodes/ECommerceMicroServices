@@ -8,7 +8,7 @@ namespace ECommerce.Api.Products.Db
 {
     public class ProductsDbContext : DbContext
     {
-        public ProductsDbContext(DbContextOptions options) : base(options)
+        public ProductsDbContext(DbContextOptions<ProductsDbContext> options) : base(options)
         {
 
         }

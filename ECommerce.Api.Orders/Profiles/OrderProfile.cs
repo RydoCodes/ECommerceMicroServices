@@ -9,8 +9,8 @@ namespace ECommerce.Api.Orders.Profiles
     {
         public OrderProfile()
         {
-            CreateMap<Db.Order, Models.Order>();
-            CreateMap<Db.OrderItem, Models.OrderItem>();
+            CreateMap<Db.Order, Models.OrderDTO>();
+            CreateMap<Db.OrderItem, Models.OrderItemDTO>();
         }
     }
 }

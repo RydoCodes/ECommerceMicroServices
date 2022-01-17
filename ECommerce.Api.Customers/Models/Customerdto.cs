@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Api.Customers.Models
 {
-    public class Customer
+    public class Customerdto
     {
         public int Id { get; set; }
         public string Name { get; set; }

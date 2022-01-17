@@ -29,23 +29,25 @@ namespace ECommerce.Api.Products.Providers
         {
             if(!dbContext.Products.Any())
             {
-                dbContext.Products.Add(new Db.Product() { Id = 1, Name = "Keyboard", Price = 20, Inventory = 100 });
-                dbContext.Products.Add(new Db.Product() { Id = 2, Name = "Monitor", Price = 5, Inventory = 100 });
-                dbContext.Products.Add(new Db.Product() { Id = 3, Name = "Mouse", Price = 150, Inventory = 100 });
-                dbContext.Products.Add(new Db.Product() { Id = 4, Name = "CPU", Price = 200, Inventory = 100 });
+                dbContext.Products.Add(new Product() { Id = 1, Name = "Keyboard", Price = 20, Inventory = 100 });
+                dbContext.Products.Add(new Product() { Id = 2, Name = "Monitor", Price = 5, Inventory = 100 });
+                dbContext.Products.Add(new Product() { Id = 3, Name = "Mouse", Price = 150, Inventory = 100 });
+                dbContext.Products.Add(new Product() { Id = 4, Name = "CPU", Price = 200, Inventory = 100 });
+
                 dbContext.SaveChanges();
             }
         }
 
-        public async Task<(bool IsSuccess, IEnumerable<Models.Product> Products, string ErrorMessage)> GetProductsAsync()
+        public async Task<(bool IsSuccess, IEnumerable<ProductDto> Products, string ErrorMessage)> GetProductsAsync()
         {
             try
             {
                 logger?.LogInformation("Getting All Customers");
-                var products = await dbContext.Products.ToListAsync();
+
+                List<Product> products = await dbContext.Products.ToListAsync();
                 if(products!=null && products.Any())
                 {
-                   var result = mapper.Map<IEnumerable<Db.Product>, IEnumerable<Models.Product>>(products);
+                    IEnumerable<ProductDto> result = mapper.Map<IEnumerable<Product>, IEnumerable<ProductDto>>(products);
                     return (true, result, null);
                 }
                 return (false, null, "Products Not Found");
@@ -57,14 +59,14 @@ namespace ECommerce.Api.Products.Providers
             }
         }
 
-        public async Task<(bool IsSuccess, Models.Product Product, string ErrorMessage)> GetProductsAsync(int id)
+        public async Task<(bool IsSuccess, ProductDto Product, string ErrorMessage)> GetProductsAsync(int id)
         {
             try
             {
-                var product = await dbContext.Products.FirstOrDefaultAsync(p=>p.Id==id);
+                Product product = await dbContext.Products.FirstAsync(p=>p.Id==id);
                 if (product != null)
                 {
-                    var result = mapper.Map<Db.Product, Models.Product>(product);
+                    ProductDto result = mapper.Map<Product, ProductDto>(product);
                     return (true, result, null);
                 }
                 return (false, null, "Product Not Found");

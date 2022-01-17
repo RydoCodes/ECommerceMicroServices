@@ -9,7 +9,7 @@ namespace ECommerce.Api.Products.Interfaces
     public interface IProductsProvider
     {
         //returning a tuple
-        Task<(bool IsSuccess, IEnumerable<Product> Products, string ErrorMessage)> GetProductsAsync();
-        Task<(bool IsSuccess, Product Product, string ErrorMessage)> GetProductsAsync(int id);
+        Task<(bool IsSuccess, IEnumerable<ProductDto> Products, string ErrorMessage)> GetProductsAsync();
+        Task<(bool IsSuccess, ProductDto Product, string ErrorMessage)> GetProductsAsync(int id);
     }
 }

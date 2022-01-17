@@ -1,4 +1,5 @@
 ﻿using ECommerce.Api.Search.Interfaces;
+using ECommerce.Api.Search.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,18 +24,18 @@ namespace ECommerce.Api.Search.Services
             //await Task.Delay(1);
             //return (true, new { Message = "Hello" });
 
-            var orderResult = await ordersService.GetOrdersAsync(customerId);
+            (bool IsSuccess, IEnumerable<Order> Orders, string ErrorMessage) orderResult = await ordersService.GetOrdersAsync(customerId);
 
-            var productResult = await productsService.GetProductsAsync();
+            (bool IsSuccess, IEnumerable<Product> products, string ErrorMessage) productResult = await productsService.GetProductsAsync();
 
             var customerresult = await customerService.GetCustomerAsync(customerId);
 
             if (orderResult.IsSuccess)
             {
 
-                foreach(var order in orderResult.Orders)
+                foreach(Order order in orderResult.Orders)
                 {
-                    foreach(var item in order.Items)
+                    foreach(OrderItem item in order.Items)
                     {
                         item.ProductName = productResult.IsSuccess ? productResult.products.FirstOrDefault(p => p.Id == item.ProductId)?.Name : "Product Name is not available";
                     }

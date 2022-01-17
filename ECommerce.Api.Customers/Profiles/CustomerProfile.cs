@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using ECommerce.Api.Customers.Db;
+using ECommerce.Api.Customers.Models;
 
 namespace ECommerce.Api.Customers.Profiles
 {
-    public class CustomerProfile : AutoMapper.Profile
+    public class CustomerProfile : Profile
     {
         public CustomerProfile()
         {
-            CreateMap<Db.Customer, Models.Customer>();
+            CreateMap<Customer, Customerdto>();
         }
     }
 }

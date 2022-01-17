@@ -1,4 +1,5 @@
 ﻿using ECommerce.Api.Products.Interfaces;
+using ECommerce.Api.Products.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace ECommerce.Api.Products.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProductsAsync()
         {
-            var result = await productsProvider.GetProductsAsync();
+            (bool IsSuccess, IEnumerable<ProductDto> Products, string ErrorMessage) result = await productsProvider.GetProductsAsync();
             if(result.IsSuccess)
             {
                 return Ok(result.Products);
@@ -31,7 +32,7 @@ namespace ECommerce.Api.Products.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductsAsync(int id)
         {
-            var result = await productsProvider.GetProductsAsync(id);
+            (bool IsSuccess, ProductDto Product, string ErrorMessage) result = await productsProvider.GetProductsAsync(id);
             if (result.IsSuccess)
             {
                 return Ok(result.Product);

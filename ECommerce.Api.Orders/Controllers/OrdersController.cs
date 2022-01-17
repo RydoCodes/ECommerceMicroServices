@@ -1,4 +1,5 @@
 ﻿using ECommerce.Api.Orders.Interfaces;
+using ECommerce.Api.Orders.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace ECommerce.Api.Orders.Controllers
         [Route("{customerId}")]
         public async Task<IActionResult> GetOrdersAsync(int customerId)
         {
-            var result = await ordersProvider.GetOrdersAsync(customerId);
+            (bool IsSuccess, IEnumerable<OrderDTO> Orders, string ErrorMessage) result = await ordersProvider.GetOrdersAsync(customerId);
             if (result.IsSuccess)
             {
                 return Ok(result.Orders);

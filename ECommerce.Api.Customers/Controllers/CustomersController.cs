@@ -1,4 +1,5 @@
 ﻿using ECommerce.Api.Customers.Interfaces;
+using ECommerce.Api.Customers.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,8 @@ namespace ECommerce.Api.Customers.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCustomersAsync()
         {
-            var result = await customersprovider.GetCustomersAsync();
+            (bool IsSuccess, IEnumerable<Customerdto> Customers, string ErrorMessage) result = await customersprovider.GetCustomersAsync();
+
             if (result.IsSuccess)
             {
                 return Ok(result.Customers);
@@ -33,7 +35,7 @@ namespace ECommerce.Api.Customers.Controllers
         [Route("{id?}")]
         public async Task<IActionResult> GetProductsAsync(int id)
         {
-            var result = await customersprovider.GetCustomersAsync(id);
+            (bool IsSuccess, Customerdto Customer, string ErrorMessage) result = await customersprovider.GetCustomersAsync(id);
             if (result.IsSuccess)
             {
                 return Ok(result.Customer);

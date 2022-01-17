@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ECommerce.Api.Products.Db;
+using ECommerce.Api.Products.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,7 +11,7 @@ namespace ECommerce.Api.Products.Profiles
     {
         public ProductProfile()
         {
-            CreateMap<Db.Product, Models.Product>();
+            CreateMap<Product, ProductDto>();
         }
     }
 }

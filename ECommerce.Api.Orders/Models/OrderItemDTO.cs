@@ -1,6 +1,6 @@
 ﻿namespace ECommerce.Api.Orders.Models
 {
-    public class OrderItem
+    public class OrderItemDTO
     {
         public int Id { get; set; }
         public int ProductId { get; set; }

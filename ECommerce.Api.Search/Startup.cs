@@ -40,6 +40,8 @@ namespace ECommerce.Api.Search
             {
                 rydoconfig.BaseAddress = new Uri(Configuration["Services:Products"]);
             }).AddTransientHttpErrorPolicy(p=>p.WaitAndRetryAsync(5,_=> TimeSpan.FromMilliseconds(500))) ;
+            // 5 : number of times to make a retry attempt
+            //500 : want to wait for 500 milliseconds/ half a second  between retries.
 
             services.AddHttpClient("RydoCustomersService", rydoconfig =>
              {

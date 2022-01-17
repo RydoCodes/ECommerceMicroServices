@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ECommerce.Api.Orders.Db;
 using ECommerce.Api.Orders.Interfaces;
+using ECommerce.Api.Orders.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -71,22 +72,23 @@ namespace ECommerce.Api.Orders.Providers
                     },
                     Total = 100
                 });
+
                 dbContext.SaveChanges();
             }
         }
 
-        public async Task<(bool IsSuccess, IEnumerable<Models.Order> Orders, string ErrorMessage)> GetOrdersAsync(int customerId)
+        public async Task<(bool IsSuccess, IEnumerable<OrderDTO> Orders, string ErrorMessage)> GetOrdersAsync(int customerId)
         {
             try
             {
-                var orders = await dbContext.Orders
-                    .Where(o => o.CustomerId == customerId)
-                    //.Include(o => o.Items)
-                    .ToListAsync();
+                List<Order> orders = await dbContext.Orders
+                                                .Where(o => o.CustomerId == customerId)
+                                                //.Include(o => o.Items)
+                                                .ToListAsync();
+
                 if (orders != null && orders.Any())
                 {
-                    var result = mapper.Map<IEnumerable<Db.Order>,
-                        IEnumerable<Models.Order>>(orders);
+                    IEnumerable<OrderDTO> result = mapper.Map<IEnumerable<Order>,IEnumerable<OrderDTO>>(orders);
                     return (true, result, null);
                 }
                 return (false, null, "Not Found");

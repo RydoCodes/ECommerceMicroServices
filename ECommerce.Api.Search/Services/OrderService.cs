@@ -24,13 +24,13 @@ namespace ECommerce.Api.Search.Services
         {
             try
             {
-                var client = httpClientFactory.CreateClient("RydoOrderService");
-                var response = await client.GetAsync($"api/orders/{customerId}");
-                if(response.IsSuccessStatusCode)
+                HttpClient orderserviceclient = httpClientFactory.CreateClient("RydoOrderService");
+                HttpResponseMessage response = await orderserviceclient.GetAsync($"api/orders/{customerId}"); // Performs GET for  http://localhost:32205/api/orders/{customerId}
+                if (response.IsSuccessStatusCode)
                 {
-                    var content = await response.Content.ReadAsByteArrayAsync();
-                    var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
-                    var result = JsonSerializer.Deserialize<IEnumerable<Order>>(content, options);
+                    byte[] content = await response.Content.ReadAsByteArrayAsync(); // Serialize the HTTP content to a byte array as an asynchronous operation.
+                    JsonSerializerOptions options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true, PropertyNamingPolicy= JsonNamingPolicy.CamelCase };
+                    IEnumerable<Order> result = JsonSerializer.Deserialize<IEnumerable<Order>>(content, options); // Serialize the byte array to <IEnumerable<Order>>
                     return (true, result, null);
                 }
 
